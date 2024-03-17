@@ -60,12 +60,12 @@ contract PrivilegeCard is ERC721Enumerable, Ownable {
     function buyCard(uint256 cardId) public payable {
         require(msg.value >= cards[cardId].price, "Insufficient funds");
         require(
-            cards[cardId].totalSupplied < cards[cardId].maxSupply,
-            "Max supply reached"
-        );
-        require(
             !cardPurchases[cardId][msg.sender],
             "Card already bought by this account"
+        );
+        require(
+            cards[cardId].totalSupplied < cards[cardId].maxSupply,
+            "Max supply reached"
         );
 
         // Create a new unique token ID for this card
