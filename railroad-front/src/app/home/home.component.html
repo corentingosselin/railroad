@@ -1,5 +1,5 @@
 <div>
-  <h1 class="text-bold text-2xl">Les cartes privilège</h1>
+  <h1 class="text-bold text-2xl">Offrez vous une carte privilège</h1>
 
   <div class="flex flex-wrap gap-3">
     @for (item of (privilegeCards$ | async); track $index) {
@@ -13,6 +13,22 @@
         Acheter
       </button>
     </div>
+    } @empty {
+    <p>Aucune carte privilège disponible</p>
+    }
+  </div>
+
+  <h1 class="text-bold text-2xl">Mes cartes privilèges</h1>
+
+  <div class="flex flex-wrap gap-3">
+    @for (item of (myPrivilegeCards$ | async); track $index) {
+    <div class="privilege-card w-12rem">
+      <h3>{{ item.name }}</h3>
+      <p>{{ item.description }}</p>
+      <p>{{ item.discountRate }} % de réduction</p>
+    </div>
+    } @empty {
+    <p>Aucune carte privilège disponible</p>
     }
   </div>
 </div>

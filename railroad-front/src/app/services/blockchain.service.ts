@@ -1,5 +1,12 @@
 import { Injectable, inject } from '@angular/core';
-import { BrowserProvider, Contract, Signer, ethers } from 'ethers';
+import {
+  BigNumberish,
+  BrowserProvider,
+  Contract,
+  Signer,
+  ethers,
+  toNumber,
+} from 'ethers';
 import { PrivilegeCard } from '../railroad.interfaces';
 import { ContractABIService } from './contract-abi.service';
 import {
@@ -9,6 +16,7 @@ import {
   forkJoin,
   from,
   map,
+  of,
   switchMap,
   tap,
 } from 'rxjs';
@@ -18,6 +26,10 @@ import {
 })
 export class BlockchainService {
   privilegeCards$: BehaviorSubject<PrivilegeCard[]> = new BehaviorSubject<
+    PrivilegeCard[]
+  >([]);
+
+  myPrivilegeCards$: BehaviorSubject<PrivilegeCard[]> = new BehaviorSubject<
     PrivilegeCard[]
   >([]);
 
@@ -52,6 +64,10 @@ export class BlockchainService {
     console.log('Contract initialized ', await this.contract.getAddress());
     this.getPrivilegeCards(this.contract).subscribe((cards) => {
       this.privilegeCards$.next(cards);
+    });
+
+    this.getUserPrivilegeCards(this.contract, signer).subscribe((cards) => {
+      this.myPrivilegeCards$.next(cards);
     });
   }
 
@@ -105,7 +121,7 @@ export class BlockchainService {
         return forkJoin(cardObservables);
       }),
       map((cards) => {
-       return cards.map((card) => ({
+        return cards.map((card) => ({
           id: card.id,
           name: card.name,
           description: card.description,
@@ -113,11 +129,13 @@ export class BlockchainService {
           maxSupply: card.maxSupply,
           discountRate: card.discountRate,
           totalSupplied: card.totalSupplied,
-        }))
-       } ),
-       //tap((cards) => console.log('PrivilegeCards:', cards)),
-       //filter card with totalSupplied < maxSupply
-      //map((cards) => cards.filter((card) => card.totalSupplied < card.maxSupply))
+        }));
+      }),
+      map((cards) =>
+        cards.filter(
+          (card) => toNumber(card.totalSupplied) < toNumber(card.maxSupply)
+        )
+      )
     );
   }
 
@@ -128,12 +146,64 @@ export class BlockchainService {
     }
     try {
       console.log('Buying PrivilegeCard:', card);
-      const transaction = await this.contract['buyCard'](card.id, { value: ethers.parseEther(card.price.toString()) });
+      const transaction = await this.contract['buyCard'](card.id, {
+        value: ethers.parseEther(card.price.toString()),
+      });
       console.log('Transaction:', transaction);
       await transaction.wait();
       console.log('PrivilegeCard bought successfully');
     } catch (error) {
       console.error('Failed to buy PrivilegeCard:', error);
     }
+  }
+
+  getUserPrivilegeCards(
+    contract: Contract,
+    signer: Signer
+  ): Observable<PrivilegeCard[]> {
+    if (!contract) {
+      console.error('Contract not initialized');
+      return of([]);
+    }
+
+    const userAddress$ = from(signer.getAddress());
+    return userAddress$.pipe(
+      switchMap((userAddress) =>
+        from(contract['balanceOf'](userAddress)).pipe(
+          switchMap((tokenCount: BigNumberish) => {
+            const cardObservables = [];
+            for (let i = 0; i < toNumber(tokenCount); i++) {
+              cardObservables.push(
+                from(contract['tokenOfOwnerByIndex'](userAddress, i))
+              );
+            }
+            return cardObservables.length > 0
+              ? forkJoin(cardObservables)
+              : of([]);
+          }),
+          switchMap((tokenIds) =>
+            forkJoin(
+              tokenIds.map((tokenId) =>
+                from(contract['getCardType'](tokenId)).pipe(
+                  switchMap((cardType) => from(contract['cards'](cardType)))
+                )
+              )
+            )
+          ),
+          map((cards) =>
+            cards.map((card, index) => ({
+              // Assuming the structure of your card object
+              id: card.id,
+              name: card.name,
+              description: card.description,
+              price: Number(ethers.formatEther(card.price)),
+              maxSupply: card.maxSupply,
+              discountRate: card.discountRate,
+              totalSupplied: card.totalSupplied,
+            }))
+          )
+        )
+      )
+    );
   }
 }

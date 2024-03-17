@@ -17,11 +17,16 @@ export class HomeComponent implements OnInit {
   blockchainService = inject(BlockchainService);
 
   privilegeCards$: BehaviorSubject<PrivilegeCard[]> = new BehaviorSubject<PrivilegeCard[]>([]);
+  myPrivilegeCards$: BehaviorSubject<PrivilegeCard[]> = new BehaviorSubject<PrivilegeCard[]>([]);
 
 
   ngOnInit(): void {
     this.blockchainService.privilegeCards$.subscribe((cards) => {
       this.privilegeCards$.next(cards);
+    });
+
+    this.blockchainService.myPrivilegeCards$.subscribe((cards) => {
+      this.myPrivilegeCards$.next(cards);
     });
   }
 
