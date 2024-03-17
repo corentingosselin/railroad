@@ -1,0 +1,67 @@
+<div class="flex flex-row gap-3">
+  <form
+    [formGroup]="privilegeCardForm"
+    (ngSubmit)="onSubmit()"
+    class="card flex flex-column gap-3 w-28rem"
+  >
+    <div class="flex flex-column gap-1">
+      <label for="name" class="text-bold text-base">Nom</label>
+      <input
+        id="name"
+        type="text"
+        formControlName="name"
+        class="w-10rem h-1rem"
+      />
+      @if (privilegeCardForm.get('name')?.errors?.['required'] &&
+      privilegeCardForm.get('name')?.touched) { Name is required. }
+    </div>
+
+    <div class="flex flex-column gap-1">
+      <label class="text-bold text-base" for="description">Description</label>
+      <textarea id="description" formControlName="description"></textarea>
+      @if (privilegeCardForm.get('description')?.errors?.['required'] &&
+      privilegeCardForm.get('description')?.touched) { Description is required.
+      }
+    </div>
+
+    <div class="flex flex-column gap-1">
+      <label class="text-bold text-base" for="price">Prix</label>
+      <input id="price" type="text" formControlName="price" />
+    </div>
+
+    <div class="flex flex-column gap-1">
+      <label class="text-bold text-base" for="maxSupply"
+        >Nombre de la collection</label
+      >
+      <input id="maxSupply" type="text" formControlName="maxSupply" />
+    </div>
+
+    <div class="flex flex-column gap-1">
+      <label class="text-bold text-base" for="discountRate"
+        >Pourcentage de promotion</label
+      >
+      <input id="discountRate" type="text" formControlName="discountRate" />
+    </div>
+
+    <button
+      type="submit"
+      [disabled]="privilegeCardForm.invalid"
+      class="mt-3 h-2rem"
+    >
+      Créer la carte privilège
+    </button>
+  </form>
+
+  <div>
+    @for (item of (privilegeCards$ | async); track $index) {
+    <div class="privilege-card w-26rem">
+      <h3>{{ item.name }}</h3>
+      <p>{{ item.description }}</p>
+      <p>{{ item.price }}</p>
+      <p>{{ item.maxSupply }}</p>
+      <p>{{ item.discountRate }}</p>
+    </div>
+
+    }
+  </div>
+</div>

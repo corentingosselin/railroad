@@ -1,0 +1,18 @@
+<div>
+  <h1 class="text-bold text-2xl">Les cartes privilège</h1>
+
+  <div class="flex flex-wrap gap-3">
+    @for (item of (privilegeCards$ | async); track $index) {
+    <div class="privilege-card w-26rem">
+      <h3>{{ item.name }}</h3>
+      <p>{{ item.description }}</p>
+      <p>{{ item.price }}</p>
+      <p>{{ item.maxSupply }}</p>
+      <p>{{ item.discountRate }}</p>
+      <button class="mt-3 h-2rem w-full" (click)="buyPrivilegeCard(item)">
+        Acheter
+      </button>
+    </div>
+    }
+  </div>
+</div>

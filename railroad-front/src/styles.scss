@@ -1,0 +1,70 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Psalter+Pahlavi&display=swap');
+
+html, body {
+    font-family: 'Noto Sans Psalter Pahlavi', sans-serif;
+}
+
+.card {
+    padding: 2rem;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #00000080;
+    background-color: var(--surface-card);
+
+    h2 {
+        margin: 0;
+    }
+
+    p {
+        margin: 0;
+    }
+
+}
+
+textarea {
+    background-color: var(--surface-50);
+    border: 1px solid var(--surface-100);
+}
+
+
+input {
+    width: 100%;
+    background-color: var(--surface-50);
+    border: 1px solid var(--surface-100);
+    border-radius: 5px;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+button {
+    background-color: #f69c00c3;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+.privilege-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #00000080;
+    background-color: #000000c3;
+    margin-bottom: 1rem;
+
+    h3 {
+        margin: 0;
+    }
+}
