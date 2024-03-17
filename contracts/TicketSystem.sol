@@ -5,7 +5,7 @@ import "./PrivilegeCard.sol";
 
 contract TicketSystem {
     PrivilegeCard private privilegeCardContract;
-    uint256 public constant TICKET_PRICE = 1 ether;
+    uint256 public constant TICKET_PRICE = 0.01 ether;
 
     constructor(address privilegeCardAddress) {
         privilegeCardContract = PrivilegeCard(privilegeCardAddress);
@@ -48,5 +48,15 @@ contract TicketSystem {
             }
         }
         return maxDiscount;
+    }
+
+    function getMyTickets() public view returns (uint256[] memory) {
+        uint256 balance = privilegeCardContract.balanceOf(msg.sender);
+        uint256[] memory tickets = new uint256[](balance);
+
+        for (uint256 i = 0; i < balance; i++) {
+            tickets[i] = privilegeCardContract.tokenOfOwnerByIndex(msg.sender, i);
+        }
+        return tickets;
     }
 }

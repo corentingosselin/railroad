@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "npx hardhat run scripts/deploy.js --network localhost",
-    "compile": "hardhat compile && cp -R artifacts/contracts/PrivilegeCard.sol/PrivilegeCard.json railroad-front/src/assets/"
+    "compile": "hardhat compile && cp -R artifacts/contracts/PrivilegeCard.sol/PrivilegeCard.json railroad-front/src/assets/ && cp -R artifacts/contracts/TicketSystem.sol/TicketSystem.json railroad-front/src/assets/"
   },
   "author": "",
   "license": "ISC",

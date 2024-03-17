@@ -34,6 +34,7 @@ export class BlockchainService {
   >([]);
 
   private contract?: Contract;
+  private contractTicket?: Contract;
 
   constructor() {
     this.initialize();
@@ -47,7 +48,31 @@ export class BlockchainService {
     const signer = await this.getSigner(provider);
 
     console.log('abi ', this.contractABIService.contractABI?.abi);
+    await this.loadPrivilegeCardContract(signer);
+    await this.loadTicketContract(signer);
+  }
 
+  async loadTicketContract(signer: Signer) {
+    const contractAddress = this.contractABIService.ticketContractAddress;
+
+    if (!contractAddress) {
+      console.error('Contract ticket address not found');
+      return;
+    }
+
+    this.contractTicket = new Contract(
+      contractAddress,
+      this.contractABIService.ticketABI?.abi,
+      signer
+    );
+
+    console.log(
+      'Ticket Contract initialized ',
+      await this.contractTicket.getAddress()
+    );
+  }
+
+  async loadPrivilegeCardContract(signer: Signer) {
     const contractAddress = this.contractABIService.contractAddress;
 
     if (!contractAddress) {
@@ -205,5 +230,32 @@ export class BlockchainService {
         )
       )
     );
+  }
+
+  async buyTicket() {
+    if (!this.contractTicket) {
+      console.error('Contract not initialized');
+      return;
+    }
+    try {
+      console.log('Buying ticket');
+      const transaction = await this.contractTicket['buyTicket']({
+        value: ethers.parseEther('0.01'),
+      });
+      console.log('Transaction:', transaction);
+      await transaction.wait();
+      console.log('Ticket bought successfully');
+    } catch (error) {
+      console.error('Failed to buy ticket:', error);
+    }
+  }
+
+  getMyTickets(): Observable<any> {
+    if (!this.contractTicket) {
+      console.error('Contract not initialized');
+      return of([]);
+    }
+
+    return from(this.contractTicket['getMyTickets']());
   }
 }

@@ -34,4 +34,8 @@ export class HomeComponent implements OnInit {
     await this.blockchainService.buyPrivilegeCard(card);
   }
   
+  async buyTicket() {
+    await this.blockchainService.buyTicket();
+  }
+
 }

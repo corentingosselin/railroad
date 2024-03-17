@@ -12,8 +12,16 @@ async function main() {
 
     console.log("PrivilegeCard address:", privilegeCard.target);
 
+    const Ticket = await ethers.getContractFactory("TicketSystem");
+    const ticket = await Ticket.deploy(privilegeCard.target);
+
     const configPath = path.join(__dirname, '../railroad-front/src/assets/contractAddress.json');
-    fs.writeFileSync(configPath, JSON.stringify({ address: privilegeCard.target }, undefined, 2));
+    fs.writeFileSync(configPath, JSON.stringify({ 
+        address: privilegeCard.target, 
+        ticketAddress: ticket.target
+     }, undefined, 2));
+
+  
 }
 
 main()

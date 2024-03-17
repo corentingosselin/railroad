@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 
 interface ContractAddress {
   address: string;
+  ticketAddress: string;
 }
 
 @Injectable({
@@ -12,16 +13,23 @@ export class ContractABIService {
   private http = inject(HttpClient);
 
   contractABI?: any;
+  ticketABI?: any;
   contractAddress?: string;
+  ticketContractAddress?: string;
 
   constructor() {
     this.getPrivilegeCardABI().subscribe((data: any) => {
       this.contractABI = data;
     });
 
-    this.getContractAddress().subscribe(
-      (data) => (this.contractAddress = data.address)
-    );
+    this.getTicketABI().subscribe((data: any) => {
+      this.ticketABI = data;
+    });
+
+    this.getContractAddress().subscribe((data) => {
+      this.contractAddress = data.address;
+      this.ticketContractAddress = data.ticketAddress;
+    });
   }
 
   getContractAddress() {
@@ -30,5 +38,9 @@ export class ContractABIService {
 
   getPrivilegeCardABI() {
     return this.http.get('assets/PrivilegeCard.json');
+  }
+
+  getTicketABI() {
+    return this.http.get('assets/TicketSystem.json');
   }
 }
