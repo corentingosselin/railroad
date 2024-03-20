@@ -3,14 +3,15 @@
 
 html, body {
     font-family: 'Noto Sans Psalter Pahlavi', sans-serif;
+    background-color: #141618;
 }
 
 .card {
     padding: 2rem;
-    border: 1px solid #000000;
+    border: 1px solid #262833;
     border-radius: 5px;
     box-shadow: 0 0 10px #00000080;
-    background-color: var(--surface-card);
+    background-color: #1e1f25;
 
     h2 {
         margin: 0;
@@ -39,7 +40,8 @@ input {
 
 button {
     background-color: #f69c00c3;
-    color: black;
+    font-weight: bold;
+    color: #141618;
     border: none;
     border-radius: 5px;
     padding: 0.5rem 1rem;
@@ -53,18 +55,62 @@ button {
 }
 
 .privilege-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     padding: 1rem;
-    border: 1px solid #000000;
+    border: 1px solid #262833;
     border-radius: 5px;
-    box-shadow: 0 0 10px #00000080;
-    background-color: #000000c3;
+    background-color: #1e1f25;
     margin-bottom: 1rem;
 
     h3 {
         margin: 0;
     }
+}
+
+i.wallpaper {
+    font-size: 1000%;
+    left: 0;
+    top: 0;
+    opacity: 0.05;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.ticket i.wallpaper {
+    font-size: 800%;
+    left: 0;
+    top: 0;
+    opacity: 0.05;
+    transition: opacity 0.2s ease-in-out;
+}
+.privilege-card {
+    i.toggle:hover {
+        color: #9d6607;
+        cursor: pointer;
+    }
+    p {
+        transition: opacity 0.2s ease-in-out;
+        opacity: 1;
+    }
+    img {
+        transition: opacity 0.2s ease-in-out;
+        opacity: 0;
+    }
+    
+}
+.privilege-card.active {
+    p {
+        opacity: 0;
+    }
+    img {
+        opacity: 1;
+    }
+    
+    i.wallpaper {
+        opacity: 0;
+    }
+
 }

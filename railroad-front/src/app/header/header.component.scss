@@ -1,0 +1,30 @@
+.header{
+    background-color: #1e1f25;
+    padding: 5px 30px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    border-radius: 8px;
+    position: fixed;
+
+    width: calc(100% - 75px);
+    z-index: 9;
+    border: #262833 solid 1px;
+
+    img {
+        margin-right: 30px;
+    }
+    a {
+        padding: 10px 15px 0 15px;
+        display: flex;
+        align-items: center;
+        border-radius: 4px;
+        text-decoration: unset;
+        font-weight: bold;
+        color: #f69c00;
+    }
+    a:hover {
+        background-color: #f69c00;
+        color: #1e1f25;
+    }
+}
