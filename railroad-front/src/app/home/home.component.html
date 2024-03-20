@@ -32,11 +32,20 @@
     }
   </div>
 
-
   <h1 class="text-bold text-2xl">Mes tickets</h1>
 
   <button class="mt-3 h-2rem w-full" (click)="buyTicket()">
     Acheter un ticket
   </button>
 
+  @for (item of (myTickets$ | async); track $index) {
+  <div class="ticket card mt-3">
+    <h3>Ticket: {{ item.id }}</h3>
+    <p>Prix d'achat: {{ item.pricePaid }}</p>
+    <p>Promotion: {{ item.discountApplied }}</p>
+ 
+  </div>
+  } @empty {
+  <p>Vous n'avez aucun ticket</p>
+  }
 </div>

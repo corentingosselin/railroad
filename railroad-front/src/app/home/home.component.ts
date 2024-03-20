@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { BlockchainService } from '../services/blockchain.service';
 import { BehaviorSubject } from 'rxjs';
-import { PrivilegeCard } from '../railroad.interfaces';
+import { PrivilegeCard, Ticket } from '../railroad.interfaces';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
 
   privilegeCards$: BehaviorSubject<PrivilegeCard[]> = new BehaviorSubject<PrivilegeCard[]>([]);
   myPrivilegeCards$: BehaviorSubject<PrivilegeCard[]> = new BehaviorSubject<PrivilegeCard[]>([]);
+  myTickets$: BehaviorSubject<Ticket[]> = new BehaviorSubject<Ticket[]>([]);
 
 
   ngOnInit(): void {
@@ -27,6 +28,10 @@ export class HomeComponent implements OnInit {
 
     this.blockchainService.myPrivilegeCards$.subscribe((cards) => {
       this.myPrivilegeCards$.next(cards);
+    });
+
+    this.blockchainService.myTickets$.subscribe((tickets) => {
+      this.myTickets$.next(tickets);
     });
   }
 

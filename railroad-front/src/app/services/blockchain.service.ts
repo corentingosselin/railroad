@@ -7,19 +7,17 @@ import {
   ethers,
   toNumber,
 } from 'ethers';
-import { PrivilegeCard } from '../railroad.interfaces';
-import { ContractABIService } from './contract-abi.service';
 import {
   BehaviorSubject,
   Observable,
-  filter,
   forkJoin,
   from,
   map,
   of,
   switchMap,
-  tap,
 } from 'rxjs';
+import { PrivilegeCard, Ticket } from '../railroad.interfaces';
+import { ContractABIService } from './contract-abi.service';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +30,8 @@ export class BlockchainService {
   myPrivilegeCards$: BehaviorSubject<PrivilegeCard[]> = new BehaviorSubject<
     PrivilegeCard[]
   >([]);
+
+  myTickets$: BehaviorSubject<Ticket[]> = new BehaviorSubject<Ticket[]>([]);
 
   private contract?: Contract;
   private contractTicket?: Contract;
@@ -47,9 +47,18 @@ export class BlockchainService {
     const provider = new ethers.BrowserProvider((window as any).ethereum);
     const signer = await this.getSigner(provider);
 
-    console.log('abi ', this.contractABIService.contractABI?.abi);
+    console.log('abi privilege', this.contractABIService.contractABI?.abi);
+    console.log('abi ticket', this.contractABIService.ticketABI?.abi);
     await this.loadPrivilegeCardContract(signer);
     await this.loadTicketContract(signer);
+
+    if (!this.contractTicket) {
+      console.error('Ticket contract not initialized');
+      return;
+    }
+    this.fetchMyTickets(this.contractTicket).subscribe((tickets) => {
+      this.myTickets$.next(tickets);
+    });
   }
 
   async loadTicketContract(signer: Signer) {
@@ -244,18 +253,46 @@ export class BlockchainService {
       });
       console.log('Transaction:', transaction);
       await transaction.wait();
+
+      this.contractTicket.on(
+        'TicketBought',
+        (buyer, amountPaid, discountApplied, event) => {
+          console.log(
+            `Ticket bought by ${buyer} for ${ethers.formatEther(
+              amountPaid
+            )} ETH with ${discountApplied}% discount`
+          );
+          // Remove listener after handling the event to avoid memory leaks
+          this.contractTicket?.off('TicketBought');
+        }
+      );
+
+      this.refreshMyTickets();
+
       console.log('Ticket bought successfully');
     } catch (error) {
       console.error('Failed to buy ticket:', error);
     }
   }
 
-  getMyTickets(): Observable<any> {
-    if (!this.contractTicket) {
-      console.error('Contract not initialized');
-      return of([]);
+  refreshMyTickets(): void {
+    if (this.contractTicket) {
+      this.fetchMyTickets(this.contractTicket).subscribe((tickets) => {
+        console.log('My Tickets:', tickets);
+      });
     }
+  }
 
-    return from(this.contractTicket['getMyTickets']());
+  fetchMyTickets(contractTicket: ethers.Contract): Observable<Ticket[]> {
+    // Create an Observable from the Promise returned by the smart contract call
+    return from(contractTicket['getMyTickets']()).pipe(
+      map((tickets: any[]) =>
+        tickets.map((ticket) => ({
+          id: parseInt(ticket[0].toString()), // Convert BigNumber to number
+          pricePaid: parseInt(ethers.formatEther(ticket[1])), // Convert Wei to Ether and then to number
+          discountApplied: parseInt(ticket[2].toString()), // Convert BigNumber to number
+        }))
+      )
+    );
   }
 }

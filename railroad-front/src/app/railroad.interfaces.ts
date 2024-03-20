@@ -9,3 +9,9 @@ export interface PrivilegeCard {
   discountRate: number;
   totalSupplied: BigNumberish;
 }
+
+export interface Ticket {
+  id: number;
+  pricePaid: number;
+  discountApplied: number;
+}
