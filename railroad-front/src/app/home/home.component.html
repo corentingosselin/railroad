@@ -6,26 +6,21 @@
 
     @for (item of (privilegeCards$ | async); track $index) {
 
-    <div class="privilege-card w-20rem">
-      <i class="absolute material-icons wallpaper">account_balance_wallet</i>
-      <h3 class="border-bottom-1 mb-2 pb-3 w-full mt-1">{{ item.name }}</h3>
-      <i
-        class="material-icons absolute top-0 right-0 m-3 toggle"
-        onClick="this.parentNode.classList.toggle('active')"
-        >image</i
-      >
-      <div class="w-full h-full content-container relative">
-        <img
-          class="absolute h-full mx-auto"
-          src="{{ item.imageURL }}"
-          alt=""
-        />
-        <p>{{ item.description }}</p>
-        <p>{{ item.price }}</p>
-        <p>{{ item.maxSupply }}</p>
-        <p>{{ item.discountRate }}</p>
+      <div class="privilege-card premium w-20rem">
+        <i class="absolute material-icons wallpaper">account_balance_wallet</i>
+        <h3 class="border-bottom-1 mb-2 pb-3 w-full mt-1">{{ item.name }}</h3>
+        <div class="w-full h-full content-container relative">
+          <img
+            class="absolute h-full mx-auto right-0"
+            src="../../assets/logo.svg"
+            alt=""
+          />
+          <p>{{ item.description }}</p>
+          <p>{{ item.price }}</p>
+          <p>{{ item.maxSupply }}</p>
+          <p>{{ item.discountRate }}</p>
+        </div>
       </div>
-    </div>
 
     } @empty {
     <p>Aucune carte privilège disponible</p>

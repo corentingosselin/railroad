@@ -83,34 +83,16 @@ i.wallpaper {
     font-size: 800%;
     left: 0;
     top: 0;
-    opacity: 0.05;
+    opacity: 0.1;
     transition: opacity 0.2s ease-in-out;
 }
-.privilege-card {
-    i.toggle:hover {
+.privilege-card.premium {
+    transition: all 0.2s ease-in-out;
+    *{
         color: #9d6607;
-        cursor: pointer;
     }
-    p {
-        transition: opacity 0.2s ease-in-out;
-        opacity: 1;
-    }
-    img {
-        transition: opacity 0.2s ease-in-out;
-        opacity: 0;
-    }
-    
 }
-.privilege-card.active {
-    p {
-        opacity: 0;
-    }
-    img {
-        opacity: 1;
-    }
-    
-    i.wallpaper {
-        opacity: 0;
-    }
 
+.privilege-card.premium:hover {
+    box-shadow: #9d6607 0px 0px 15px 0px;
 }
