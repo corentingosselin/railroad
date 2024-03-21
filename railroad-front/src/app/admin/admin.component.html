@@ -26,6 +26,14 @@
     </div>
 
     <div class="flex flex-column gap-1">
+      <label class="text-bold text-base" for="image">Image</label>
+      <input id="image" type="text" formControlName="imageURL" />
+      @if (privilegeCardForm.get('imageURL')?.errors?.['required'] &&
+      privilegeCardForm.get('imageURL')?.touched) {
+      <span class="error">Image is required.</span>}
+    </div>
+
+    <div class="flex flex-column gap-1">
       <label class="text-bold text-base" for="price">Prix</label>
       <input id="price" type="text" formControlName="price" />
     </div>
@@ -66,7 +74,7 @@
       <div class="w-full h-full content-container relative">
         <img
           class="absolute h-full mx-auto"
-          src="https://pbs.twimg.com/media/GJHBfkpXYAAtd15?format=jpg&name=medium"
+          src="{{ item.imageURL }}"
           alt=""
         />
 

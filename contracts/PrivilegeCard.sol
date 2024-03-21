@@ -21,6 +21,7 @@ contract PrivilegeCard is ERC721Enumerable, Ownable {
         uint256 price;
         string name;
         string description;
+        string imageURL;
         uint256 maxSupply;
         uint256 discountRate;
         uint256 totalSupplied;
@@ -37,6 +38,7 @@ contract PrivilegeCard is ERC721Enumerable, Ownable {
     function createCard(
         string memory name,
         string memory description,
+        string memory imageURL,
         uint256 price,
         uint256 maxSupply,
         uint256 discountRate
@@ -46,6 +48,7 @@ contract PrivilegeCard is ERC721Enumerable, Ownable {
             price,
             name,
             description,
+            imageURL,
             maxSupply,
             discountRate,
             0

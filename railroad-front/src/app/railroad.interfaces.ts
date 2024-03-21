@@ -4,6 +4,7 @@ export interface PrivilegeCard {
   id: BigNumberish;
   name: string;
   description: string;
+  imageURL: string;
   price: number;
   maxSupply: BigNumberish;
   discountRate: number;

@@ -32,6 +32,7 @@ export class AdminComponent implements OnInit {
     this.privilegeCardForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
+      imageURL: ['', Validators.required],
       price: ['', [Validators.required, Validators.pattern(/^\d+\.?\d*$/)]], // Regex for price validation
       maxSupply: ['', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]], // Allow only integers
       discountRate: ['', [Validators.required, Validators.pattern(/^\d+\.?\d*$/)]], // Regex for discount rate validation
@@ -44,6 +45,7 @@ export class AdminComponent implements OnInit {
       this.blockchainService.createPrivilegeCard(
         this.privilegeCardForm.value.name,
         this.privilegeCardForm.value.description,
+        this.privilegeCardForm.value.imageURL,
         this.privilegeCardForm.value.price,
         this.privilegeCardForm.value.maxSupply,
         this.privilegeCardForm.value.discountRate

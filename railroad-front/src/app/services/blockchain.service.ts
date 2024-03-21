@@ -120,6 +120,7 @@ export class BlockchainService {
   async createPrivilegeCard(
     name: string,
     description: string,
+    imageURL: string,
     price: ethers.BigNumberish,
     maxSupply: number,
     discountRate: number
@@ -132,6 +133,7 @@ export class BlockchainService {
       const transaction = await this.contract['createCard'](
         name,
         description,
+        imageURL,
         ethers.parseEther(price.toString()),
         maxSupply,
         discountRate
@@ -159,6 +161,7 @@ export class BlockchainService {
           id: card.id,
           name: card.name,
           description: card.description,
+          imageURL: card.imageURL,
           price: Number(ethers.formatEther(card.price)),
           maxSupply: card.maxSupply,
           discountRate: card.discountRate,
@@ -230,6 +233,7 @@ export class BlockchainService {
               id: card.id,
               name: card.name,
               description: card.description,
+              imageURL: card.imageURL,
               price: Number(ethers.formatEther(card.price)),
               maxSupply: card.maxSupply,
               discountRate: card.discountRate,
